@@ -1,23 +1,100 @@
-<!DOCTYPE html>
+<! DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="styles.css">
-    <title>Signup Page</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>E-commerce Website</title>
+  <link rel="stylesheet" href="https://cdn.tailwindcss.com">
 </head>
 <body>
-    <div class="container">
-        <form id="signupForm">
-            <h2>Signup</h2>
-            <input type="text" id="name" placeholder="Name" required>
-            <input type="email" id="email" placeholder="Email" required>
-            <input type="password" id="password" placeholder="Password" required>
-            <input type="password" id="confirmPassword" placeholder="Confirm Password" required>
-            <button type="submit">Signup</button>
-            <p id="message"></p>
-        </form>
-    </div>
-    <script src="script.js"></script>
+  <header class="bg-purple-500 text-white p-4">
+    <nav class="container mx-auto flex justify-between">
+      <a href="#" class="text-lg font-bold">E-commerce Website</a>
+      <ul class="flex items-center">
+        <li class="mr-6">
+          <a href="#" class="text-sm">Home</a>
+        </li>
+        <li class="mr-6">
+          <a href="#" class="text-sm">About</a>
+        </li>
+        <li class="mr-6">
+          <a href="#" class="text-sm">Contact</a>
+        </li>
+      </ul>
+    </nav>
+  </header>
+  <aside class="bg-purple-200 p-4 w-64 hidden md:block">
+    <h2 class="text-lg font-bold mb-4">User  Information</h2>
+    <ul>
+      <li class="mb-2">
+        <a href="#" class="text-sm">Track Order</a>
+      </li>
+      <li class="mb-2">
+        <a href="#" class="text-sm">Profile</a>
+      </li>
+      <li class="mb-2">
+        <a href="#" class="text-sm">Username</a>
+      </li>
+      <li class="mb-2">
+        <a href="#" class="text-sm">Mobile No.</a>
+      </li>
+      <li class="mb-2">
+        <a href="#" class="text-sm">Email</a>
+      </li>
+      <li class="mb-2">
+        <a href="#" class="text-sm">Profile Photo</a>
+      </li>
+    </ul>
+  </aside>
+  <main class="container mx-auto p-4">
+    <h1 class="text-3xl font-bold mb-4">E-commerce Products</h1>
+    <div id="products" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+  </main>
+  <footer class="bg-purple-500 text-white p-4">
+    <p class="text-sm">&copy; 2024 E-commerce Website</p>
+  </footer>
+  <script>
+    // Connect to MongoDB
+    const MongoClient = require('mongodb').MongoClient;
+    const url = 'mongodb://localhost:27017';
+    const dbName = 'ecommerce';
+    const client = new MongoClient(url);
+    client.connect(function(err) {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log('Connected to MongoDB');
+        const db = client.db(dbName);
+        const productsCollection = db.collection('products');
+        // Get products from database
+        productsCollection.find().toArray(function(err, products) {
+          if (err) {
+            console.log(err);
+          } else {
+            console.log(products);
+            // Display products on the page
+            const productsDiv = document.getElementById('products');
+            products.forEach(function(product) {
+              const productDiv = document.createElement('div');
+              productDiv.classList.add('bg-white', 'p-4', 'rounded', 'shadow-md');
+              const productTitle = document.createElement('h2');
+              productTitle.classList.add('text-lg', 'font-bold', 'mb-2');
+              productTitle.textContent = product.name;
+              const productDescription = document.createElement('p');
+              productDescription.classList.add('text-sm', 'mb-2');
+              productDescription.textContent = product.description;
+              const buyNowButton = document.createElement('button');
+              buyNowButton.classList.add('bg-purple-500', 'text-white', 'py-2', 'px-4', 'rounded');
+              buyNowButton.textContent = 'Buy Now';
+              productDiv.appendChild(productTitle);
+              productDiv.appendChild(productDescription);
+              productDiv.appendChild(buyNowButton);
+              productsDiv.appendChild(productDiv);
+            });
+          }
+        });
+      }
+    });
+  </script>
 </body>
 </html>
